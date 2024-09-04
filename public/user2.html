@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Chat - user_unique_2</title>
+</head>
+<body>
+  <h2>Chat - user_unique_2</h2>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button id="sendBtn">Send</button>
+
+  <div id="chatBox"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // User joins their chat room
+    const userId = 'unique_2';
+    socket.emit('joinChat', userId);
+
+    // Send a message
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const message = document.getElementById('messageInput').value;
+      socket.emit('userMessage', { userId, message });
+      document.getElementById('messageInput').value = '';
+    });
+
+    // Listen for new messages
+    socket.on('newMessage', (data) => {
+      const chatBox = document.getElementById('chatBox');
+      const messageElement = document.createElement('p');
+      messageElement.textContent = `${data.sender}: ${data.message}`;
+      chatBox.appendChild(messageElement);
+    });
+  </script>
+</body>
+</html>
